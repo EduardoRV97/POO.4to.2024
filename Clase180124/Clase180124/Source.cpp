@@ -17,7 +17,8 @@ int main() {
 	Estudiante miEstudiante[3] = {Estudiante("Eduardo", 26),Estudiante("Pepe", 27),Estudiante("Pedro", 28) };
 	vector<Estudiante>miEstudiante;
 	miEstudiante.push_back(Estudiante("Eduardo", 26));
-
+	miEstudiante.push_back(Estudiante("Pepe", 27));
+	miEstudiante.push_back(Estudiante("Juan", 28));
 	for (int i = 0; i < 3; i++) {
 		miEstudiante[i].obtenerInformacion();
 	}
