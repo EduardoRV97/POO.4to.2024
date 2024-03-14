@@ -1,4 +1,5 @@
 #pragma once
+#include "Prerequisitos.h"
 class Singleton {
 //Se agrega un valor privado con valor 0
 private:
