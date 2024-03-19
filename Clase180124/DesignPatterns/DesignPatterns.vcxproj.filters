@@ -80,5 +80,8 @@
     <ClInclude Include="Include\Prerequisitos.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Include\SigletonMultiHilo.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

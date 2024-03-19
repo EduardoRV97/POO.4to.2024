@@ -147,6 +147,7 @@
     <ClInclude Include="Include\Prototype.h" />
     <ClInclude Include="Include\Proxy.h" />
     <ClInclude Include="Include\RegistroActividad.h" />
+    <ClInclude Include="Include\SigletonMultiHilo.h" />
     <ClInclude Include="Include\Singleton.h" />
     <ClInclude Include="Include\TemplateMethod.h" />
     <ClInclude Include="Include\TemplateMethodAct.h" />

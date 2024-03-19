@@ -18,14 +18,61 @@
 #include "TemplateMethodAct.h"//Acceso a encabezado TemplateMethodAct, Actividad de TemplateMethod
 #include "Adapter.h"//Acceso a encabezado Adapter
 #include "Decorator.h"//Acceso a encabezado Decorator
+#include "SigletonMultiHilo.h"//Acceso a encabezado Sigleton Multihilo
 
-//Mutex y Threads
-#include <thread> //Libreria Thread
-#include <mutex> // Libreria mutex
+SigletonMultihilo* SigletonMultihilo::m_instance = nullptr;
+mutex SigletonMultihilo::m_mutexInstance;
 
 Singleton* Singleton::instance = nullptr; //Se le da valor nulo a la instancia creada en singleton
 RegistroActividad* RegistroActividad::instancia = nullptr; //Se le da valor nulo a la instancia creada por RegistroActividad
 mutex mtx; //Variable del tipo Mutex
+
+Configuracion* Configuracion::m_instance = nullptr;
+mutex Configuracion::m_mutexInstance;
+
+//Productor-Consumidor
+queue<int> buffer;
+mutex mtx1;
+condition_variable cv;
+const int bufferSize = 5;
+
+void productor() {
+	for (int i = 0; i < 10; i++) {
+		unique_lock<mutex> lock(mtx1);
+		cv.wait(lock, [] {return buffer.size() < bufferSize; });
+
+		int dato = rand() % 100;
+		buffer.push(dato);
+		cout << "Productor: Producido " << dato << endl;
+		lock.unlock();
+		cv.notify_all();
+	}
+}
+
+void consumidor(int id) {
+	for (int i = 0; i < 10; i++) {
+		unique_lock<mutex> lock(mtx1);
+		cv.wait(lock, [] {return !buffer.empty(); });
+
+		int dato = buffer.front();
+		buffer.pop();
+		cout << "Consumidort " << id << " consumio: " << dato << endl;
+		lock.unlock();
+		cv.notify_all();
+	}
+}
+
+void Hilo3(int _id, string _val) {
+	Configuracion& z = Configuracion::getInstance();
+	z.setValue(_val);
+	cout << "Se encuentra en proceso el id " << _id << endl;
+}
+void Hilo2(int _id, int _val) {
+	SigletonMultihilo& s = SigletonMultihilo::getInstance();
+	s.setValue(_val);
+	//Realizar operaciones con la instancia del sigleton
+	cout << "\nHilo " << _id << " acceiendo al SigletonMultihilo." << endl;
+}
 
 void Hilo(int id) {//Funcion que bloquea y desbloquea los hilos cada vez que corre una iteracion y muestra un mensaje
 	for (int i = 0; i < 5; i++) {
@@ -559,6 +606,55 @@ int main() {
 	delete cafeteria;
 	delete cafeConLeche;
 	delete cafeConAzucar;
+
+
+	// Sigleton Multihilo
+	// El patron de diseño Sigleton garantiza que una clase tenga una sola instancia y proporciona un punto de acceso global a esa intancia
+	// El singleton multihilo asegura que, inlusc en entornos multihilo, solo se crea una unica instancia
+	// Usos Comunes del Singleton Multihilo
+	// -Cuando necesitas una unica instancia de una clase en entornos multihilo
+	// -Para crear un punto d acceso global a una instancia compartidad en aplicaciones multihilo
+	// -Evitar problemas de concurrencia al crear una unica instancia e n un entorno de multiples hilos
+	// El patron sigleton Multihilo es una version segura para hilos del patron Sigleton. Garantiza que, en entornos multihilo
+	// solo se crea una unica instancia de una clase
+
+	thread hiloSingle1(Hilo2, 1, 2);
+	thread hiloSingle2(Hilo2, 2, 4);
+	hiloSingle1.join();
+	hiloSingle2.join();
+	int val = SigletonMultihilo::getInstance().getValue();
+	cout << "Valor en el SigletonMultiHilo: " << val << endl;
+
+	//Activiad Singleton Multihilos
+
+	thread hiloAct1(Hilo3, 1, "Opciones Generales");
+	thread hiloAct2(Hilo3, 2, "Graficos");
+	hiloAct1.join();
+	hiloAct2.join();
+	string fra = Configuracion::getInstance().getValue();
+	cout << "Actualmente se encuentra en " << fra << endl;
+
+
+	// Producto-Consumidor
+
+	//El problema del Producto-Consumidor
+	// 
+	// 
+	// 
+	// 
+	// 
+	// 
+	// 
+	//
+
+	srand(time(nullptr));
+	thread HProductor(productor);
+	thread HConsumidor(consumidor, 1);
+	thread HConsumidor2(consumidor, 2);
+
+	HProductor.join();
+	HConsumidor.join();
+	HConsumidor2.join();
 
 	return 0;
 }
