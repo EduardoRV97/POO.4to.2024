@@ -637,15 +637,16 @@ int main() {
 
 	// Producto-Consumidor
 
-	//El problema del Producto-Consumidor
+	//El problema del Producto-Consumidor es un escenario comun en programacion multihilo en el que los productores generan datos
+	// y los consumidores los consumen. Para evitar conflictos y garantizar que los consumidores
+	// no intenten consumir datos inexistentes, se utuliza una estructura de datos compartida y mutex para controlar el acceso
 	// 
+	// El problema del Producto-Consumidor se refiere a una situacion en la que uno o varios Productores generan datos y uno o varios
+	// consumidores consumen esos datos. Los productores y consumidores deben operar de manera segura en un entorno multihilo
 	// 
-	// 
-	// 
-	// 
-	// 
-	// 
-	//
+	// -Gestion de recursos compartifos en entornos multihilo
+	// -Comunicacion entre hilos para procesos de produccion y consumo
+	// Evitar conflictos y asegurar que los consumidores no intenten consumir datos inexistentes.
 
 	srand(time(nullptr));
 	thread HProductor(productor);
